@@ -10,7 +10,7 @@ I used [this guide](https://rhye.org/post/stm32-with-opencm3-0-compiling-and-upl
 
 ### Programming
 
-    $ openocd -f interface/stlink-v2.cfg -f target/stm32f4x.cfg -c "program main.elf verify reset exit"
+    $ make flash
 
 ### Debugging
 

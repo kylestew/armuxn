@@ -1,0 +1,5 @@
+clang
+
+-DSTM32F4
+
+-I./libopencm3/include

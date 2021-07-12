@@ -31,7 +31,7 @@ int main(void) {
     // Now, let's forever toggle this LED back and forth
     while (1) {
         gpio_toggle(GPIOD, GPIO12);
-        for (i = 0; i < 100000; i++) {
+        for (i = 0; i < 1000000; i++) {
             __asm__("nop");
         }
     }

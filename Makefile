@@ -117,14 +117,15 @@ $(BUILD_DIR)/%.c.o: %.c
 	@echo %% $(notdir $<)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 
-flash: 
+flash: $(TARGET_ELF)
 	@printf "  FLASH   $<\n"
-	(echo "halt; program $(realpath $(*).elf) verify reset" | nc -4 localhost 4444 2>/dev/null) || \
+	(echo "halt; program ./build/blinky.elf verify reset" | nc -4 localhost 4444 2>/dev/null) || \
 		$(OOCD) -f interface/$(OOCD_INTERFACE).cfg \
 		-f target/$(OOCD_TARGET).cfg \
-		-c "program $(*).elf verify reset exit" \
+		-c "program $(BUILD_DIR)/$(TARGET).elf verify reset exit" \
 		$(NULL)
 
+	# (echo "halt; program $(realpath $(BUILD_DIR)/$(TARGET).elf) verify reset" | nc -4 localhost 4444 2>/dev/null) || \
 
 .PHONY: clean
 clean:

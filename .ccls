@@ -2,4 +2,4 @@ clang
 
 -DSTM32F4
 
--I./libopencm3/include
+-I./lib/libopencm3/include

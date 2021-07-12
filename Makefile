@@ -54,7 +54,7 @@ CSTD		?= -std=c99
 CFLAGS 		+= $(OPT) $(CSTD) $(DEBUG)
 CFLAGS 		+= $(ARCH_FLAGS)
 CFLAGS 		+= -Wextra -Wshadow -Wimplicit-function-declaration
-CFLAGS 		+= -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes
+CFLAGS 		+= -Wredundant-decls -Wstrict-prototypes
 CFLAGS 		+= -fno-common -ffunction-sections -fdata-sections
 
 # C++

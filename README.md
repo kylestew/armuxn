@@ -14,7 +14,18 @@ I used [this guide](https://rhye.org/post/stm32-with-opencm3-0-compiling-and-upl
 
 ### Debugging
 
-???
+Connect to target via OpenOCD
+
+    $ openocd -f interface/stlink.cfg -f target/stm32f4x.cfg
+
+Open another terminal window and start a GDB session. This series of commands loads the target symbols, connects to the
+running OpenOCD session, and resets remote execution halting.
+
+    $ arm-none-eabi-gdb build/blinky.elf
+    > target remote :3333
+    > monitor reset halt
+
+You are now ready to debug using [GDB commands](https://users.ece.utexas.edu/~adnan/gdb-refcard.pdf)
 
 ## Useful Docs
 

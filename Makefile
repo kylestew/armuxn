@@ -1,9 +1,7 @@
-# https://github.com/rschlaikjer/hello-stm32-0-blinky/blob/master/Makefile
-
 #################################
 # Target / Hardware Specific
-#################################
-TARGET 			= blinky
+#m################################
+TARGET 			= display
 LDSCRIPT 		= stm32f4-discovery.ld
 LIBNAME 		= opencm3_stm32f4
 DEFS 			+= -DSTM32F4
@@ -58,7 +56,10 @@ CFLAGS 		+= -Wredundant-decls -Wstrict-prototypes
 CFLAGS 		+= -fno-common -ffunction-sections -fdata-sections
 
 # C++
-# TODO
+CXXLAGS		+= $(OPT) $(CXXSTD) $(DEBUG)
+CXXLAGS		+= $(ARCH_FLAGS)
+CXXLAGS 	+= -Wextra -Wshadow -Wredundant-decls -Weffc++
+CXXLAGS 	+= -fno-common -ffunction-sections -fdata-sections
 
 # C & C++ preprocessor common flags
 CPPFLAGS 	+= -MD
@@ -106,42 +107,31 @@ TARGET_HEX=$(BUILD_DIR)/$(TARGET).hex
 #################################
 
 $(TARGET_HEX): $(TARGET_ELF)
-	$(OBJCOPY) -O ihex --set-start 0x8000000 $< $@
+	@$(OBJCOPY) -O ihex --set-start 0x8000000 $< $@
 
 $(TARGET_ELF): $(OBJS) 
-	$(LD) -o $@ $^ $(LDFLAGS) $(LDLIBS)
-	$(SIZE) $(TARGET_ELF)
+	@$(LD) -o $@ $^ $(LDFLAGS) $(LDLIBS)
+	@$(SIZE) $(TARGET_ELF)
 
 $(BUILD_DIR)/%.c.o: %.c
 	@mkdir -p $(dir $@)
 	@echo %% $(notdir $<)
-	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
+
+# $(BUILD_DIR)/%.cpp.o: %.cpp
+# 	@mkdir -p $(dir $@)
+# 	@echo %% $(notdir $<)
+# 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 flash: $(TARGET_ELF)
 	@printf "  FLASH   $<\n"
-	(echo "halt; program ./build/blinky.elf verify reset" | nc -4 localhost 4444 2>/dev/null) || \
+	(echo "halt; program ./build/$(TARGET).elf verify reset" | nc -4 localhost 4444 2>/dev/null) || \
 		$(OOCD) -f interface/$(OOCD_INTERFACE).cfg \
 		-f target/$(OOCD_TARGET).cfg \
 		-c "program $(BUILD_DIR)/$(TARGET).elf verify reset exit" \
 		$(NULL)
 
-	# (echo "halt; program $(realpath $(BUILD_DIR)/$(TARGET).elf) verify reset" | nc -4 localhost 4444 2>/dev/null) || \
-
 .PHONY: clean
 clean:
 	rm -r $(BUILD_DIR)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-include $(OPENCM3_DIR)/mk/genlink-rules.mk
